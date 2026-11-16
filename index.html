@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="ROAM — un archivio personale dei luoghi da scoprire nel mondo."
+    />
+    <meta name="theme-color" content="#e4eae6" />
+    <title>ROAM — Places to go</title>
+    <link rel="icon" href="assets/Logo_Simbolo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      src="https://unpkg.com/globe.gl@2.45.0/dist/globe.gl.min.js"
+      defer
+    ></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="topbar-note">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span>IL MIO ATLANTE PERSONALE</span>
+        </div>
+        <a class="brand" href="#" aria-label="ROAM — homepage">
+          <img src="assets/Logo_Simbolo.svg" alt="ROAM" />
+        </a>
+      </header>
+
+      <main class="workspace">
+        <aside class="sidebar" aria-label="Luoghi salvati">
+          <div class="sidebar-intro">
+            <div class="eyebrow">01 / LA MIA LISTA</div>
+            <h1>Places<br />to go<span class="title-period">.</span></h1>
+            <p class="intro-copy">
+              Una raccolta di posti che aspettano solo di essere vissuti.
+            </p>
+            <div class="list-meta">
+              <span><strong id="place-count">06</strong> LUOGHI</span>
+              <span class="meta-divider"></span>
+              <span><strong id="country-total-summary">05</strong> PAESI</span>
+            </div>
+            <div class="archive-controls" aria-label="Backup archivio">
+              <button id="export-archive" type="button">ESPORTA ARCHIVIO</button>
+              <button id="import-archive" type="button">IMPORTA ARCHIVIO</button>
+              <input id="archive-input" type="file" accept=".zip,application/zip" hidden />
+            </div>
+          </div>
+
+          <div class="filter-block">
+            <div class="section-label">ESPLORA PER</div>
+            <div class="filter-list" role="group" aria-label="Filtra per categoria">
+              <button class="filter-chip is-active" type="button" data-filter="all" aria-pressed="true">
+                Tutti <span>06</span>
+              </button>
+              <button class="filter-chip" type="button" data-filter="cibo" aria-pressed="false">
+                Cibo <span>02</span>
+              </button>
+              <button class="filter-chip" type="button" data-filter="hotel" aria-pressed="false">
+                Hotel <span>02</span>
+              </button>
+              <button class="filter-chip" type="button" data-filter="esperienze" aria-pressed="false">
+                Esperienze <span>02</span>
+              </button>
+            </div>
+          </div>
+
+          <label class="search-box">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="10.8" cy="10.8" r="6.8"></circle>
+              <path d="m16 16 4.5 4.5"></path>
+            </svg>
+            <input id="place-search" type="search" placeholder="Cerca nei miei luoghi" autocomplete="off" />
+            <span class="search-shortcut">⌘ K</span>
+          </label>
+
+          <section class="country-section" aria-labelledby="countries-title">
+            <div class="section-heading">
+              <h2 id="countries-title" class="section-label">PAESI</h2>
+              <span id="country-count" class="section-count">05</span>
+            </div>
+            <div id="country-list" class="country-list"></div>
+          </section>
+
+          <section class="places-section" aria-labelledby="places-title">
+            <div class="section-heading places-heading">
+              <h2 id="places-title" class="section-label">TUTTI I LUOGHI</h2>
+              <span id="visible-count" class="section-count">06</span>
+            </div>
+            <div id="places-list" class="places-list"></div>
+            <p id="empty-state" class="empty-state" hidden>Nessun luogo trovato nella lista.</p>
+          </section>
+        </aside>
+
+        <section class="map-area" aria-label="Mappa dei luoghi">
+          <div class="map-heading">
+            <div>
+              <div class="eyebrow">LA TUA PROSSIMA STORIA</div>
+              <h2>Il mondo, a modo tuo<span class="title-period">.</span></h2>
+            </div>
+            <div class="map-heading-right">
+              <span class="map-live"><span class="status-dot"></span> MAPPA INTERATTIVA</span>
+              <button id="map-reset" class="icon-button reset-button" type="button" aria-label="Mostra tutti i luoghi sulla mappa" title="Mostra tutti i luoghi">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 8.5A8 8 0 1 1 4 13"></path><path d="M4 4.5v4h4"></path></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="map-frame">
+            <div id="world-map" aria-label="Mappa interattiva del mondo"></div>
+            <article id="place-detail" class="place-detail" aria-live="polite"></article>
+            <button id="map-close" class="map-close" type="button" aria-label="Torna ai luoghi">
+              <span aria-hidden="true">×</span> <span>LUOGHI</span>
+            </button>
+            <button id="add-place" class="add-button" type="button" aria-label="Aggiungi un luogo">
+              <span aria-hidden="true">+</span>
+              <span class="add-tooltip">AGGIUNGI UN LUOGO</span>
+            </button>
+            <div class="map-caption" aria-hidden="true">TRASCINA PER ESPLORARE · SCORRI PER ZOOM</div>
+          </div>
+          <p class="map-note">Ogni luogo comincia da un segno sulla mappa.</p>
+        </section>
+
+        <button id="mobile-map-toggle" class="mobile-map-toggle" type="button">
+          <span class="toggle-symbol" aria-hidden="true">↗</span>
+          <span class="toggle-label">APRI LA MAPPA</span>
+        </button>
+      </main>
+      <footer class="footer">
+        <span>ROAM © 2026</span>
+        <span>FATTO PER ANDARE LONTANO</span>
+        <span>
+          <a href="https://globe.gl/" target="_blank" rel="noreferrer">GLOBO 3D · GLOBE.GL</a>
+          ·
+          <a href="https://www.naturalearthdata.com/" target="_blank" rel="noreferrer">CONFINI · NATURAL EARTH</a>
+        </span>
+      </footer>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <dialog id="add-dialog" class="roam-dialog add-dialog" aria-labelledby="add-dialog-title">
+      <div class="dialog-topbar">
+        <span class="eyebrow">NUOVA DESTINAZIONE</span>
+        <button class="dialog-close" type="button" data-close-dialog aria-label="Chiudi">×</button>
+      </div>
+      <h2 id="add-dialog-title">Un posto da ricordare<span class="title-period">.</span></h2>
+      <p class="dialog-intro">Cerca un luogo: proveremo a completare i dettagli disponibili da fonti aperte.</p>
+      <form id="add-place-form">
+        <label class="dialog-field">
+          <span>NOME O INDIRIZZO</span>
+          <input id="location-query" type="search" required placeholder="Es. Blue Hill, New York" autocomplete="off" />
+        </label>
+        <label class="dialog-field">
+          <span>CATEGORIA</span>
+          <select id="new-category">
+            <option value="cibo">Cibo</option>
+            <option value="hotel">Hotel</option>
+            <option value="esperienze" selected>Esperienze</option>
+          </select>
+        </label>
+        <button class="dialog-submit" type="submit">CERCA IL LUOGO <span aria-hidden="true">↗</span></button>
+      </form>
+      <p id="geocode-status" class="dialog-status" aria-live="polite"></p>
+      <div id="geocode-results" class="geocode-results"></div>
+      <p class="source-note">RICERCA FORNITA DA OPENSTREETMAP / NOMINATIM</p>
+    </dialog>
+
+    <dialog id="place-dialog" class="roam-dialog place-dialog" aria-labelledby="detail-title">
+      <div class="dialog-topbar">
+        <span id="detail-folder-breadcrumb" class="eyebrow"></span>
+        <button class="dialog-close" type="button" data-close-dialog aria-label="Chiudi">×</button>
+      </div>
+      <div class="place-dialog-layout">
+        <div id="detail-gallery" class="detail-gallery"></div>
+        <section class="detail-content">
+          <span id="detail-category" class="detail-category"></span>
+          <h2 id="detail-title"></h2>
+          <p id="detail-address" class="detail-address"></p>
+          <p id="detail-description" class="detail-description" hidden></p>
+          <a id="description-source" class="description-source" target="_blank" rel="noreferrer" hidden>WIKIPEDIA · CC BY-SA ↗</a>
+          <dl id="detail-facts" class="detail-facts"></dl>
+          <div class="detail-links">
+            <a id="google-maps-link" class="detail-link" target="_blank" rel="noreferrer">APRI SU GOOGLE MAPS ↗</a>
+              <a id="tripadvisor-link" class="detail-link" target="_blank" rel="noreferrer" hidden>TRIPADVISOR ↗</a>
+              <a id="official-link" class="detail-link" target="_blank" rel="noreferrer" hidden>SITO UFFICIALE ↗</a>
+              <a id="osm-link" class="detail-link" target="_blank" rel="noreferrer" hidden>OPENSTREETMAP ↗</a>
+          </div>
+          <label class="notes-field">
+            <span>NOTE PERSONALI</span>
+            <textarea id="personal-notes" rows="3" placeholder="Aggiungi un appunto per il tuo viaggio..."></textarea>
+          </label>
+          <section class="personal-photo-manager" aria-labelledby="personal-photo-title">
+            <h3 id="personal-photo-title">FOTOGRAFIE PERSONALI</h3>
+            <label id="personal-photo-dropzone" class="photo-dropzone">
+              <input id="personal-photo-input" type="file" accept="image/jpeg,image/png,image/webp" multiple />
+              <span>Aggiungi fotografie</span>
+              <small>JPG, PNG o WebP · selezione multipla o trascina qui</small>
+            </label>
+            <p class="photo-storage-note">Gli originali restano intatti in questo browser; se necessario, una copia ottimizzata viene usata solo per la galleria.</p>
+            <div id="personal-photo-staging" class="photo-staging" aria-live="polite"></div>
+            <button id="save-personal-photos" class="dialog-submit" type="button" hidden>AGGIUNGI ALLA GALLERIA</button>
+          </section>
+          <div class="detail-actions">
+            <button id="edit-place" type="button">MODIFICA</button>
+            <button id="delete-place" type="button">ELIMINA LUOGO</button>
+            <a id="photo-credit" class="photo-credit" target="_blank" rel="noreferrer" hidden></a>
+          </div>
+          <form id="place-edit-form" class="place-edit-form" hidden>
+            <label class="dialog-field"><span>NOME</span><input name="name" required /></label>
+            <div class="edit-field-grid">
+              <label class="dialog-field"><span>CITTÀ</span><input name="city" /></label>
+              <label class="dialog-field"><span>PAESE</span><input name="country" /></label>
+            </div>
+            <label class="dialog-field"><span>INDIRIZZO</span><input name="address" /></label>
+            <label class="dialog-field"><span>CATEGORIA</span>
+              <select name="category"><option value="cibo">Cibo</option><option value="hotel">Hotel</option><option value="esperienze">Esperienze</option></select>
+            </label>
+            <label class="dialog-field"><span>DESCRIZIONE</span><textarea name="description" rows="3"></textarea></label>
+            <label class="dialog-field"><span>SITO UFFICIALE</span><input name="website" type="url" /></label>
+            <label class="dialog-field"><span>TRIPADVISOR (SE CORRISPONDE)</span><input name="tripadvisorUrl" type="url" /></label>
+            <label class="dialog-field"><span>TELEFONO</span><input name="phone" type="tel" /></label>
+            <label class="dialog-field"><span>ORARI</span><input name="openingHours" /></label>
+            <div class="edit-actions">
+              <button class="dialog-submit" type="submit">SALVA MODIFICHE</button>
+              <button id="cancel-edit" class="text-button" type="button">ANNULLA</button>
+            </div>
+          </form>
+          <button id="save-notes" class="notes-save" type="button">SALVA NOTE</button>
+        </section>
+      </div>
+    </dialog>
+
+    <dialog id="photo-lightbox" class="photo-lightbox" aria-label="Fotografia ingrandita">
+      <button id="close-photo-lightbox" class="dialog-close" type="button" aria-label="Chiudi fotografia">×</button>
+      <img id="photo-lightbox-image" alt="" />
+    </dialog>
+  </body>
+</html>
